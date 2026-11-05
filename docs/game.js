@@ -118,14 +118,21 @@ async function loadVisionModels() {
     "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm"
   );
 
-  handLandmarker = await visionModule.HandLandmarker.createFromOptions(vision, {
+  const handOptions = {
     baseOptions: { modelAssetPath: HAND_MODEL, delegate: "GPU" },
     runningMode: "VIDEO",
     numHands: 2,
     minHandDetectionConfidence: 0.52,
     minHandPresenceConfidence: 0.50,
     minTrackingConfidence: 0.50,
-  });
+  };
+  try {
+    handLandmarker = await visionModule.HandLandmarker.createFromOptions(vision, handOptions);
+  } catch (error) {
+    console.warn("Hand model GPU not available; retry on CPU", error);
+    delete handOptions.baseOptions.delegate;
+    handLandmarker = await visionModule.HandLandmarker.createFromOptions(vision, handOptions);
+  }
 
   try {
     poseLandmarker = await visionModule.PoseLandmarker.createFromOptions(vision, {
@@ -272,7 +279,11 @@ function classifyHands(handResult) {
   const all = handResult?.landmarks || [];
   all.forEach((landmarks, index) => {
     let slot = index;
-    const handedness = handResult?.handedness?.[index]?.[0]?.categoryName?.toLowerCase();
+    const handedness = (
+      handResult?.handednesses?.[index]?.[0]?.categoryName ||
+      handResult?.handedness?.[index]?.[0]?.categoryName ||
+      ""
+    ).toLowerCase();
     // Video preview is mirrored; keep stable left/right slots while converting to game coordinates.
     if (handedness === "left") slot = 0;
     if (handedness === "right") slot = 1;
@@ -373,7 +384,7 @@ function spawnWave(now) {
       x: rand(70, W - 70) + (i - (count - 1) / 2) * 12,
       y: H + rand(25, 95),
       vx: rand(-135, 135),
-      vy: -rand(speed * .88, speed * 1.16),
+      vy: -rand(speed * 1.22, speed * 1.48),
       r: rand(27, 39),
       style,
       bomb: false,
@@ -386,7 +397,7 @@ function spawnWave(now) {
   if (elapsed > 7 && Math.random() < bombChance) {
     game.fruits.push({
       x: rand(80, W - 80), y: H + 45,
-      vx: rand(-110, 110), vy: -rand(speed * .93, speed * 1.16),
+      vx: rand(-110, 110), vy: -rand(speed * 1.25, speed * 1.48),
       r: 34, style: null, bomb: true, angle: 0, spin: rand(-1.4, 1.4),
     });
   }
