@@ -30,6 +30,13 @@ jobs:
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 
+      - name: Verify website files
+        run: |
+          test -f docs/index.html
+          test -f docs/style.css
+          test -f docs/game.js
+          node --check docs/game.js
+
       - name: Upload website files
         uses: actions/upload-pages-artifact@v4
         with:
