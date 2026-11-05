@@ -50,3 +50,26 @@ Nếu PowerShell không cho kích hoạt môi trường ảo, dùng trực tiế
 Python 3.11 · Pygame · OpenCV · MediaPipe Pose · MediaPipe Hands
 
 Camera và nhận diện được xử lý ngay trên máy, không tải hình ảnh lên máy chủ. Phiên bản hiện tại dùng đồ họa trái cây vẽ bằng Pygame (chưa phải ảnh chụp thật).
+
+
+## Phiên bản chạy trên trình duyệt (GitHub Pages)
+
+Dự án có thêm phiên bản web trong thư mục `docs/`, dùng HTML, CSS, JavaScript, Canvas và MediaPipe Tasks Vision. Bản web không cần Python.
+
+### Chạy trên GitHub Pages
+1. Mở **Settings → Pages**.
+2. Trong **Build and deployment → Source**, chọn **GitHub Actions**.
+3. Không cần chọn mẫu Jekyll hoặc tạo workflow mẫu. Repository đã có workflow riêng tại `.github/workflows/deploy-pages.yml`.
+4. Mỗi lần cập nhật `docs/`, GitHub Actions sẽ tự triển khai trang web.
+5. Sau khi workflow hoàn tất thành công, mở:
+
+   https://gold30032006-cyber.github.io/chemtraicay/
+
+### Chạy thử trên máy
+Có thể mở bằng Live Server trong VS Code, hoặc chạy một máy chủ local trong thư mục `docs`:
+```powershell
+py -m http.server 8000 --directory docs
+```
+Sau đó truy cập http://localhost:8000. Camera chỉ hoạt động trên localhost hoặc trang HTTPS và cần người dùng cấp quyền truy cập.
+
+Phiên bản web tải MediaPipe và các model nhận diện từ CDN bên ngoài; lần đầu cần kết nối Internet. Webcam và xử lý hình ảnh được thực hiện trong trình duyệt, không gửi video lên máy chủ của dự án.
