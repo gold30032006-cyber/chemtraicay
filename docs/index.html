@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#08111f">
+  <meta name="description" content="FRUIT SLASH - Trò chơi chém trái cây bằng camera và chuyển động hai bàn tay.">
+  <title>FRUIT SLASH — Camera Motion Game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="FRUIT SLASH trang chủ">
+      <span class="brand-mark">✦</span>
+      <span><strong>FRUIT SLASH</strong><small>CAMERA MOTION GAME</small></span>
+    </a>
+    <div class="top-actions">
+      <span class="privacy"><i></i> Xử lý trực tiếp trên thiết bị</span>
+      <button id="fullscreenBtn" class="icon-btn" type="button" title="Toàn màn hình" aria-label="Toàn màn hình">⛶</button>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <section class="intro">
+      <div class="eyebrow"><span></span> HAND TRACKING · ARCADE EXPERIENCE</div>
+      <h1>Chém trái cây.<br><em>Không cần chạm màn hình.</em></h1>
+      <p>Đứng trước webcam, dùng ngón trỏ như một lưỡi dao và thử xem bạn ghi được bao nhiêu điểm.</p>
+    </section>
+
+    <section class="game-layout" aria-label="Khu vực trò chơi">
+      <aside class="side-column">
+        <section class="panel camera-panel">
+          <div class="panel-heading">
+            <div><span class="section-kicker">01 / CAMERA</span><h2>Camera trực tiếp</h2></div>
+            <span id="cameraStatus" class="status-pill neutral"><i></i> Chưa bật</span>
+          </div>
+          <div class="camera-frame">
+            <video id="cameraVideo" autoplay playsinline muted></video>
+            <canvas id="cameraOverlay"></canvas>
+            <div id="cameraPlaceholder" class="camera-placeholder">
+              <div class="camera-symbol">◉</div>
+              <strong>Camera đang chờ</strong>
+              <span>Bật camera để nhận diện người và bàn tay</span>
+            </div>
+            <div class="camera-corner corner-tl"></div><div class="camera-corner corner-tr"></div>
+            <div class="camera-corner corner-bl"></div><div class="camera-corner corner-br"></div>
+          </div>
+          <div class="camera-meta">
+            <div><span class="meta-dot" id="personDot"></span><span id="personLabel">Chưa phát hiện người</span></div>
+            <div><b id="handCount">0</b><span>/ 2 bàn tay</span></div>
+          </div>
+          <button id="cameraBtn" class="primary-btn camera-btn" type="button"><span>◎</span> BẬT CAMERA</button>
+          <p class="permission-note">Trình duyệt sẽ hỏi quyền truy cập webcam. Hình ảnh không được tải lên máy chủ.</p>
+        </section>
+
+        <section class="panel controls-panel">
+          <div class="panel-heading compact">
+            <div><span class="section-kicker">02 / HOW TO PLAY</span><h2>Cách chơi</h2></div>
+            <span class="tiny-badge">2 HANDS</span>
+          </div>
+          <ol class="instructions">
+            <li><b>01</b><span>Đứng cách camera khoảng 1–2 mét, để thấy rõ thân trên.</span></li>
+            <li><b>02</b><span>Đưa ngón trỏ vào nút bắt đầu và giữ yên một chút.</span></li>
+            <li><b>03</b><span>Vung một hoặc hai tay để chém ngang trái cây.</span></li>
+            <li><b>04</b><span>Tránh bom và đừng để trái cây rơi khỏi màn hình.</span></li>
+          </ol>
+          <div class="keyboard-hint"><kbd>P</kbd> Tạm dừng <kbd>ESC</kbd> Thoát toàn màn hình</div>
+        </section>
+      </aside>
+
+      <section class="panel play-panel">
+        <div class="play-heading">
+          <div><span class="section-kicker">03 / PLAY ARENA</span><h2>Sân chơi</h2></div>
+          <div class="live-indicator"><span></span> LIVE ARENA</div>
+        </div>
+        <div class="hud">
+          <div class="hud-card"><small>ĐIỂM SỐ</small><strong id="scoreValue">0000</strong></div>
+          <div class="hud-card"><small>CẤP ĐỘ</small><strong id="levelValue" class="cyan">01</strong></div>
+          <div class="hud-card lives-card"><small>MẠNG</small><strong id="livesValue">♥ ♥ ♥</strong></div>
+          <div class="hud-card time-card"><small>THỜI GIAN</small><strong id="timeValue">00:00</strong></div>
+        </div>
+        <div class="arena-wrap">
+          <canvas id="gameCanvas" width="960" height="650" aria-label="Sân chơi chém trái cây"></canvas>
+          <div class="arena-bottom"><span>✦ Chuyển động tay được theo dõi trực tiếp</span><span id="fpsLabel">CAM READY</span></div>
+        </div>
+        <div class="play-footer">
+          <div class="legend"><span><i class="legend-fruit"></i> +10 điểm</span><span><i class="legend-bomb"></i> Bom nguy hiểm</span></div>
+          <button id="pauseBtn" class="secondary-btn" type="button" disabled>Ⅱ TẠM DỪNG</button>
+        </div>
+      </section>
+    </section>
+
+    <footer class="footer">
+      <span>FRUIT SLASH <b>·</b> VERSION WEB</span>
+      <span>BUILT WITH MEDIAPIPE & HTML CANVAS</span>
+    </footer>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="./game.js"></script>
+</body>
+</html>
